@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间应该是对应接口的包名+接口名 -->
+<mapper namespace="com.fdzc.gd.familyhotel.dao.BillDao">
+
+    <!-- 新增 -->
+    <insert id="addBill" parameterType="Bill"  >
+         insert into tbl_bs_bill (bill_money,bill_time) values (#{billMoney},#{billTime})
+    </insert>
+
+    <!-- 查询所有 -->
+    <select id="findAll" resultType="Bill">
+         select bill_id,bill_money,bill_time from tbl_bs_bill
+    </select>
+
+
+</mapper>

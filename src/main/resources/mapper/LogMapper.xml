@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间应该是对应接口的包名+接口名 -->
+<mapper namespace="com.fdzc.gd.familyhotel.dao.LogDao">
+
+    <!-- 新增 -->
+    <insert id="addLog" parameterType="Log"  >
+         insert into tbl_bs_log (log_operation,log_name,log_date) values (#{logOperation},#{logName},#{logDate})
+    </insert>
+
+    <!-- 查询所有 -->
+    <select id="findAll" resultType="Log" >
+         select log_id,log_operation,log_name,log_date from tbl_bs_log
+            where 1 = 1
+            <if test="logId != null and logId != ''">
+                and log_id = #{logId}
+            </if>
+            <if test="logOperation != null and logOperation != ''">
+                and log_operation = #{logOperation}
+            </if>
+            <if test="logName != null and logName != ''">
+                and log_name = #{logName}
+            </if>
+            <if test="logIf != null and logIf != ''">
+                and log_date = #{logDate}
+            </if>
+    </select>
+
+
+</mapper>

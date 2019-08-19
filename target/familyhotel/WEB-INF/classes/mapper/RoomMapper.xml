@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间应该是对应接口的包名+接口名 -->
+<mapper namespace="com.fdzc.gd.familyhotel.dao.RoomDao">
+
+    <!-- 新增 -->
+    <insert id="addRoom" parameterType="Room"  >
+         insert into tbl_bs_rooms(room_no,room_pic,room_type,room_price,room_equip,room_status,room_memo)
+         values (#{roomNo},#{roomPic},#{roomType},#{roomPrice},#{roomEquipStr},#{roomStatus},#{roomMemo})
+    </insert>
+
+    <!-- 删除 -->
+    <delete id="deleteRoom" parameterType="int">
+          delete from tbl_bs_rooms where room_id=#{roomId}
+    </delete>
+
+    <!-- 修改 -->
+    <update id="updateRoom" parameterType="Room" >
+        update tbl_bs_rooms
+        set room_no=#{roomNo},room_pic=#{roomPic},room_type=#{roomType},room_price=#{roomPrice},
+            room_equip=#{roomEquipStr},room_status=#{roomStatus},room_memo=#{roomMemo}
+        where room_id=#{roomId}
+    </update>
+
+    <!-- 根据id查找单个用户 -->
+    <select id="findRoomById" parameterType="int" resultType="Room">
+         select room_id,room_no,room_type,room_price,room_equip as 'roomEquipStr',room_status,room_memo  from tbl_bs_rooms where room_id=#{roomId}
+    </select>
+
+    <!-- 查询所有 动态SQL拼接 -->
+    <select id="findAll" resultType="Room">
+         select room_id,room_no,room_type,room_price,room_equip as roomEquipStr,room_status,room_memo from tbl_bs_rooms
+             where 1 = 1
+            <if test="roomId != null and roomId != ''">
+                and room_id = #{roomId}
+            </if>
+            <if test="roomNo != null and roomNo != ''">
+                and room_no like "%"#{roomNo}"%"
+            </if>
+            <if test="roomType != null and roomType != ''">
+                and room_type = #{roomType}
+            </if>
+            <if test="roomPrice != null and roomPrice != ''">
+                and room_price = #{roomPrice}
+            </if>
+            <if test="roomEquip != null and roomEquip != ''">
+                and room_equip = #{roomEquip}
+            </if>
+            <if test="roomStatus != null and roomStatus != ''">
+                and room_status = #{roomStatus}
+            </if>
+            <if test="roomMemo != null and roomMemo != ''">
+                and room_memo = #{roomMemo}
+            </if>
+
+    </select>
+
+    <!-- 通过Id查到对应照片 -->
+    <select id="getRoomPic" parameterType="int" resultMap="imgResultMap">
+        select room_pic
+        from tbl_bs_rooms
+        where room_id = #{roomId}
+    </select>
+
+    <resultMap type="java.util.Map" id="imgResultMap" >
+        <result   column="room_pic" property="imgBytes" jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler"/>
+    </resultMap>
+
+    <!-- 查询当前房间总数-->
+    <select id="getRoomCount" resultType="int" >
+          select  count(room_id)  from tbl_bs_rooms
+    </select>
+
+    <!-- 查询状态为未预定(Not scheduled)的房间 ('a'代表未预定，'b'代表已预定，'c'代表已入住)-->
+    <select id="getNcRoomConut" resultType="int" >
+          select  count(room_id)  from tbl_bs_rooms where room_status = 'a'
+    </select>
+
+    <!-- 查询状态为已预定(Ordered)的房间 ('a'代表未预定，'b'代表已预定，'c'代表已入住)-->
+    <select id="getOdRoomConut" resultType="int" >
+          select  count(room_id)  from tbl_bs_rooms where room_status = 'b'
+    </select>
+
+    <!-- 查询状态为已入住(Has been in)的房间 ('a'代表未预定，'b'代表已预定，'c'代表已入住)-->
+    <select id="getBiRoomConut" resultType  ="int" >
+          select  count(room_id)  from tbl_bs_rooms where room_status = 'c'
+    </select>
+
+    <!-- 查询是否还有该类型的房间-->
+    <select id="isExistRoom" resultType ="int" >
+          select  count(room_id)  from tbl_bs_rooms where ( room_type = #{roomType} and room_status = 'a' )
+    </select>
+
+    <!-- 获取预定类型房间的roomNo-->
+    <select id="findPreRoomNo" resultType ="java.lang.String" >
+    select  room_no  from `tbl_bs_rooms`  where ( room_type = #{roomType} and room_status = "a") order by room_type limit 1
+    </select>
+
+    <!-- 查询房间价格-->
+    <select id="roomPrice" resultType ="java.lang.String" >
+          select  room_price  from tbl_bs_rooms where room_Type = #{roomType} limit 1
+    </select>
+
+    <!-- 根据类型修改房间状态 -->
+    <update id="updateRoomStu" parameterType="java.lang.String" >
+        update tbl_bs_rooms set room_status="b"  where room_no = #{roomNo}
+    </update>
+
+    <!-- 入住后修改房间状态 -->
+    <update id="changeRoomStu" parameterType="java.lang.String" >
+        update tbl_bs_rooms set room_status="c"  where room_no = #{roomNo}
+    </update>
+
+</mapper>

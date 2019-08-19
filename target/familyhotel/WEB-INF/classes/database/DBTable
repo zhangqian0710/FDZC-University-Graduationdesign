@@ -1,0 +1,74 @@
+
+#mysql jdbc
+jdbc.driver=com.mysql.jdbc.Driver
+jdbc.url=jdbc:mysql://localhost:3306/mysql?useUnicode=true&amp;characterEncoding=utf8
+jdbc.username=root
+jdbc.password=root
+
+--数据库表
+--会员表(会员id、会员昵称、会员性别、会员电话、会员身份证号、会员真实名字、会员注册日期）
+create table tbl_bs_members(
+  mb_id int primary key auto_increment,
+  mb_name varchar(20) not null,
+  mb_sex char(1) not null,
+  mb_tel varchar(11) not null,
+  mb_idcard varchar(18),
+  mb_realname varchar(20),
+  mb_birthday date,
+  mb_integral varchar(20)
+);
+
+
+--房间信息表（房间id、房间号、房间图片、#房间类型、房间价格、#房间设施、#房间状态、房间相关信息）
+create table tbl_bs_rooms(
+  room_id  int primary key auto_increment,
+  room_no  varchar(20) not null,
+  room_pic mediumblob,
+  room_type  char(1) not null,
+  room_price varchar(10) not null,
+  room_peoplenum  int not null,
+  room_equip varchar(20) not null,
+  room_status char(1) not null,
+  room_memo  varchar(200)
+);
+
+--订单表（订单号、订单人真实姓名、选择房间的号码、入住时间、结束时间、订单价格、#付款方式、下单时间）
+create table tbl_bs_order(
+  order_id int primary key auto_increment,
+  order_mb_realname varchar(20) not null,
+  order_room_no varchar(20) not null,
+  order_intime date,
+  order_outtime date,
+  order_price varchar(20) not null,
+  order_payment char(1) not null,
+  order_time date
+);
+
+
+--后台管理员信息(管理员id、管理员密码、管理员姓名、管理员性别、#管理员类型)
+create table tbl_bs_users(
+  user_no    char(6) primary key,
+  user_pwd   char(6) not null,
+  user_name  varchar(30) not null,
+  user_sex   char(1) not null,
+  user_limit char(1) not null
+);
+
+--账单纪录
+create table tbl_bs_bill(
+  bill_id int primary key auto_increment,
+  bill_money varchar(20) not null,
+  bill_time date
+);
+
+
+--操作记录
+create table tbl_bs_log(
+  log_id int primary key auto_increment,
+  log_operation varchar(20) not null,
+  log_time date
+);
+
+
+
+

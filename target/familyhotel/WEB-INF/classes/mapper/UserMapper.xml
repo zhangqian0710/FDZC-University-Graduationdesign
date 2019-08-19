@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间应该是对应接口的包名+接口名 -->
+<mapper namespace="com.fdzc.gd.familyhotel.dao.UserDao">
+
+    <!-- 新增 -->
+    <insert id="addUser" parameterType="User"  >
+         insert into tbl_bs_users(user_no,user_pwd,user_name,user_sex,user_limit)
+         values (#{userNo},#{userPwd},#{userName},#{userSex},#{userLimit})
+    </insert>
+
+    <!-- 删除 -->
+    <delete id="deleteUser" parameterType="int">
+          delete from tbl_bs_users where user_id=#{userId}
+    </delete>
+
+    <!-- 修改 -->
+    <update id="updateUser" parameterType="User" >
+        update tbl_bs_users
+        set user_pwd=#{userPwd},user_name=#{userName},user_sex=#{userSex},user_limit=#{userLimit}
+        where user_id=#{userId}
+    </update>
+
+    <!-- 根据id查找单个管理员 -->
+    <select id="findUserById" parameterType="int" resultType="User">
+         select * from tbl_bs_users where user_id=#{userId}
+    </select>
+
+    <!-- 查询所有 -->
+    <select id="findAll" resultType="User">
+         select * from tbl_bs_users
+            where 1 = 1
+            <if test="userId != null and userId != ''">
+                and user_id = #{userId}
+            </if>
+            <if test="userNo != null and userNo != ''">
+                and user_no like "%"#{userNo}"%"
+            </if>
+            <if test="userName != null and userName != ''">
+                and user_name = #{userName}
+            </if>
+            <if test="userSex != null and userSex != ''">
+                and user_sex = #{userSex}
+            </if>
+            <if test="userLimit != null and userLimit != ''">
+                and user_limit = #{userLimit}
+            </if>
+    </select>
+
+    <!-- 根据管理员账号、管理员密码（userNo、userPwd）查找单个用户 -->
+    <select id="findUserByNoPwd" resultType="User">
+         select user_id,user_no,user_pwd,user_name,user_sex,user_limit from tbl_bs_users where user_no=#{userNo} and user_pwd=#{userPwd}
+    </select>
+
+    <!-- 查询当前管理员总数-->
+    <select id="getUserCount" resultType="int" >
+          select  count(user_id)  from tbl_bs_users
+    </select>
+
+    <!-- 查询超级管理员个数 ('a'代表超级管理员，'b'代表前台服务员，'c'代表财务管理员)-->
+    <select id="getAdminConut" resultType="int" >
+          select  count(user_id)  from tbl_bs_users where user_limit = 'a'
+    </select>
+
+    <!-- 查询前台服务员的个数 ('a'代表超级管理员，'b'代表前台服务员，'c'代表财务管理员)-->
+    <select id="getQtUserConut" resultType="int" >
+          select  count(user_id)  from tbl_bs_users where user_limit = 'b'
+    </select>
+
+    <!-- 查询财务管理员个数 ('a'代表超级管理员，'b'代表前台服务员，'c'代表财务管理员)-->
+    <select id="getBillUserConut" resultType  ="int" >
+          select  count(user_id)  from tbl_bs_users where user_limit = 'c'
+    </select>
+
+
+
+</mapper>

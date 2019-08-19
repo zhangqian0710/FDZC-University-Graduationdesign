@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间应该是对应接口的包名+接口名 -->
+<mapper namespace="com.fdzc.gd.familyhotel.dao.MembDao">
+
+    <!-- 新增 -->
+    <insert id="addMemb" parameterType="Member"  >
+         insert into tbl_bs_members(mb_name,mb_pwd,mb_sex,mb_tel)
+         values (#{membName},#{membPwd},#{membSex},#{membTel})
+    </insert>
+
+    <!-- 删除 -->
+    <delete id="deleteMemb" parameterType="int">
+          delete from tbl_bs_members where mb_id=#{membId}
+    </delete>
+
+    <!-- 修改 -->
+    <update id="updateMemb" parameterType="Member" >
+        update tbl_bs_members
+        set mb_name=#{membName},mb_pwd=#{membPwd},mb_sex=#{membSex},mb_tel=#{membTel}
+        where memb_id=#{membId}
+    </update>
+
+    <!-- 根据id查找单个用户 -->
+    <select id="findMembById" parameterType="int" resultType="Member">
+         select * from tbl_bs_members where mb_id=#{membId}
+    </select>
+
+    <!-- 根据手机号查询主否存在 -->
+    <select id="findMembByTel" resultType="Member">
+         select mb_id membId,mb_name membName,mb_pwd membPwd,mb_sex membSex,mb_tel membTel from tbl_bs_members where mb_tel=#{membTel}
+    </select>
+
+    <!-- 根据管理员账号、管理员密码（userNo、userPwd）查找单个用户 -->
+    <select id="findMemberByNoPwd" resultType="Member">
+         select mb_id membId,mb_name membName,mb_pwd membPwd,mb_sex membSex,mb_tel membTel from tbl_bs_members where mb_tel=#{membTel} and mb_pwd=#{membPwd}
+    </select>
+
+
+    <!-- 查询所有 -->
+    <select id="findAll" resultType="Member">
+        select mb_id membId,mb_name membName,mb_pwd membPwd,mb_sex membSex,mb_tel membTel from tbl_bs_members
+        where 1 = 1
+        <if test="membId != null and membId != ''">
+            and mb_id membId = #{membId}
+        </if>
+        <if test="membName != null and membName != ''">
+            and mb_name membName = {membName}
+        </if>
+        <if test="membPwd != null and membPwd != ''">
+            and mb_pwd membPwd = #{membPwd}
+        </if>
+        <if test="membSex != null and membSex != ''">
+            and mb_sex membSex = #{membSex}
+        </if>
+        <if test="membTel != null and membTel != ''">
+            and mb_tel membTel = #{membTel}
+        </if>
+    </select>
+
+
+</mapper>

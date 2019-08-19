@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间应该是对应接口的包名+接口名 -->
+<mapper namespace="com.fdzc.gd.familyhotel.dao.OrderDao">
+
+    <!-- 新增 -->
+    <insert id="addOrder" parameterType="Order"  >
+         insert into tbl_bs_order(order_mb_name,order_room_no,order_room_type,order_intime,order_outtime,order_price,order_payment,order_status)
+         values (#{orderMembName},#{orderRoomNo},#{orderRoomType},#{orderInTime},#{orderOutTime},#{orderPrice},#{orderPayment},#{orderStatus})
+    </insert>
+
+    <!-- 删除 -->
+    <delete id="deleteOrder" parameterType="int">
+          delete from tbl_bs_order where order_id=#{orderId}
+    </delete>
+
+    <!-- 修改 -->
+    <update id="updateOrder"  parameterType="java.lang.String" >
+        update tbl_bs_order
+        set order_status="c"
+        where order_room_no =#{orderRoomNo}
+    </update>
+
+    <!-- 根据id查找单条账单 -->
+    <select id="findOrderById" parameterType="int" resultType="Order">
+         select * from tbl_bs_order where order_id=#{orderId}
+    </select>
+
+    <!-- 查询所有 -->
+    <select id="findAll" resultType="Order">
+         select order_id orderId,order_mb_name orderMembName,order_room_no orderRoomNo,order_room_type orderRoomType,order_intime orderInTime,order_outtime orderOutTime,order_price orderPrice,order_payment orderPayment,order_status orderStatus from tbl_bs_order
+    </select>
+
+    <!-- 条件查询所有 -->
+    <select id="findAllOrder" resultType="Order" parameterType="java.lang.String">
+         select order_id orderId,order_mb_name orderMembName,order_room_no orderRoomNo,order_room_type orderRoomType,order_intime orderInTime,order_outtime orderOutTime,order_price orderPrice,order_payment orderPayment,order_status orderStatus
+         from tbl_bs_order
+         where order_intime=#{orderInTime}
+    </select>
+
+    <!-- 条件查询所有 -->
+    <select id="findAllFin" resultType="Order" parameterType="java.lang.String">
+         select order_id orderId,order_mb_name orderMembName,order_room_no orderRoomNo,order_room_type orderRoomType,order_intime orderInTime,order_outtime orderOutTime,order_price orderPrice,order_payment orderPayment,order_status orderStatus
+         from tbl_bs_order
+         where order_outtime=#{orderOutTime}
+    </select>
+
+
+</mapper>
